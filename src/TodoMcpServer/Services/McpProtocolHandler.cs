@@ -10,6 +10,8 @@ public class McpProtocolHandler
     private const string MethodInitialize = "initialize";
     private const string MethodToolsList = "tools/list";
     private const string MethodToolsCall = "tools/call";
+    private const string MethodResourcesList = "resources/list";
+    private const string MethodResourcesRead = "resources/read";
 
     // JSON-RPC Error codes
     private const int ErrorCodeInvalidRequest = -32600;
@@ -49,6 +51,8 @@ public class McpProtocolHandler
                 MethodInitialize => HandleInitialize(request),
                 MethodToolsList => HandleToolsList(request),
                 MethodToolsCall => await HandleToolsCallAsync(request),
+                MethodResourcesList => HandleResourcesList(request),
+                MethodResourcesRead => await HandleResourcesReadAsync(request),
                 _ => CreateErrorResponse(request.Id, ErrorCodeMethodNotFound, $"Method not found: {request.Method}")
             };
 
@@ -75,7 +79,8 @@ public class McpProtocolHandler
             protocolVersion = ProtocolVersion,
             capabilities = new
             {
-                tools = new { }
+                tools = new { },
+                resources = new { }
             },
             serverInfo = new
             {
@@ -209,6 +214,55 @@ public class McpProtocolHandler
         {
             _logger.LogError(ex, "Error in list_tasks");
             return new ListTasksResult { Success = false, Error = ex.Message, Tasks = new(), Count = 0 };
+        }
+    }
+
+    private McpResponse HandleResourcesList(McpRequest request)
+    {
+        _logger.LogInformation("Client requesting resources list");
+
+        var result = new { resources = ResourceDefinitions.Resources };
+
+        return new McpResponse { Id = request.Id, Result = result };
+    }
+
+    private async Task<McpResponse> HandleResourcesReadAsync(McpRequest request)
+    {
+        try
+        {
+            if (request.Params == null)
+            {
+                return CreateErrorResponse(request.Id, ErrorCodeInvalidParams, "Invalid params: params required");
+            }
+
+            var paramsJson = request.Params.Value;
+
+            if (!paramsJson.TryGetProperty("uri", out var uriElement))
+            {
+                return CreateErrorResponse(request.Id, ErrorCodeInvalidParams, "Invalid params: 'uri' required");
+            }
+
+            var uri = uriElement.GetString();
+            _logger.LogInformation("Reading resource: {Uri}", uri);
+
+            var resourceContent = await ResourceDefinitions.ReadResourceAsync(uri ?? string.Empty);
+
+            if (resourceContent == null)
+            {
+                return CreateErrorResponse(request.Id, ErrorCodeInvalidParams, $"Resource not found: {uri}");
+            }
+
+            var result = new
+            {
+                contents = new[] { resourceContent }
+            };
+
+            return new McpResponse { Id = request.Id, Result = result };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error reading resource");
+            return CreateErrorResponse(request.Id, ErrorCodeInternalError, "Resource read error", ex.Message);
         }
     }
 

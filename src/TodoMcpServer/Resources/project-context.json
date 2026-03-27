@@ -1,0 +1,7 @@
+{
+  "project": "E-Commerce Platform Rewrite",
+  "team": ["Sarah (backend)", "Mike (frontend)", "Lisa (QA)"],
+  "priorities": "Performance and security are top concerns. All API endpoints must be documented. No task should be marked complete without a code review.",
+  "currentSprint": "Sprint 4 - Checkout flow",
+  "conventions": "Tasks prefixed with BUG: are urgent. Tasks prefixed with TECH: are tech debt."
+}
