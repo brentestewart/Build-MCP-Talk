@@ -26,50 +26,55 @@
 ## Implementation Overview (Current State)
 
 ### TodoMcpServer Project
-**Purpose**: MCP protocol server exposing todo management tools.
+**Purpose**: MCP protocol server exposing todo management tools and resources.
 
 **Architecture**:
-- **Fully static server classes** (`StdioServer`, `HttpServer`) - no fake instance abstractions
-- **System.CommandLine 3.0** for CLI parsing with typed options
+- **Official .NET MCP SDK** (`ModelContextProtocol` and `ModelContextProtocol.AspNetCore` packages)
+- **Attribute-based tool/resource discovery** using `[McpServerTool]` and `[McpServerResource]`
+- **Extension method pattern** for clean service registration
 - **Two transport modes**:
-  - `stdio`: VS Code integration via standard I/O
-  - `http`: Claude Desktop integration via HTTP endpoints
-- **Clean Program.cs**: 23 lines showing demo-friendly high-level flow
+  - `stdio`: VS Code/Claude Desktop integration via standard I/O
+  - `http`: HTTP-based integration via ASP.NET Core
+- **Clean Program.cs**: ~90 lines with separated concerns using local functions
 
 **Key Components**:
 ```
 Configuration/
-  CliOptions.cs        - CLI option definitions (static readonly Option<T> properties)
-  McpConfiguration.cs  - Configuration model with defaults
-  ServerMode.cs        - Enum for Stdio/Http mode selection
+  McpConfiguration.cs  - Constants for default port and backend URL
+  ServerOptions.cs     - Server configuration options class
+
+Extensions/
+  ServiceCollectionExtensions.cs - DI registration for MCP services
 
 Models/
-  McpRequest.cs        - MCP protocol request structure
-  McpResponse.cs       - MCP protocol response structure
   TaskDto.cs           - Backend API task DTO
   ApiResults.cs        - Result types (AddTaskResult, CompleteTaskResult, ListTasksResult)
-  ToolDefinition.cs    - MCP tool metadata
 
-Servers/
-  StdioServer.cs       - Static stdio transport server
-  HttpServer.cs        - Static HTTP transport server
+Tools/
+  TodoTools.cs         - MCP tool implementations using [McpServerTool] attributes
+
+Resources/
+  TodoResources.cs     - MCP resource implementations using [McpServerResource] attributes
+  project-context.json - Project metadata resource content
 
 Services/
-  McpProtocolHandler.cs - MCP protocol message routing and handling
-  TodoApiClient.cs      - HTTP client for backend integration
-  ToolDefinitions.cs    - MCP tool definitions registry
+  TodoApiClient.cs     - HTTP client for backend integration
 ```
 
-**Established Patterns**:
-1. **Distributed constants**: Constants live near their usage (no monolithic Constants.cs)
-   - Protocol constants → McpProtocolHandler
-   - Tool names → ToolDefinitions
-   - Config defaults → McpConfiguration
-   - CLI option names → CliOptions
-2. **Static server architecture**: Both servers are static classes with `RunAsync()` entry points
-3. **ILoggerFactory.CreateLogger(string)**: Pattern for logging in static classes
-4. **ServerMode enum**: Type-safe mode selection instead of magic strings
-5. **Direct object construction**: No unnecessary factory methods or abstraction layers
+**SDK Patterns**:
+1. **Attribute-based discovery**: Tools and resources use `[McpServerToolType]`/`[McpServerResourceType]` class markers and `[McpServerTool]`/`[McpServerResource]` method markers
+2. **Dependency injection**: `TodoApiClient` injected via constructor into `TodoTools`
+3. **Host builder pattern**: Use `Host.CreateApplicationBuilder` for stdio, `WebApplication.CreateBuilder` for HTTP
+4. **SDK registration**: Chain `.AddMcpServer().WithStdioServerTransport().WithTools<T>().WithResources<T>()`
+5. **Transport selection**: Simple args parsing switches between stdio and HTTP modes
+
+**Tool Implementations**:
+- `AddTask(string description)` - Adds a new todo item
+- `CompleteTask(int id)` - Marks a task as complete
+- `ListTasks()` - Returns all open tasks
+
+**Resource Implementations**:
+- `project://context` - Project metadata (team, priorities, sprint, conventions)
 
 ### TodoApi Project
 **Purpose**: Simple backend API for task management (demonstrates external system integration).
@@ -108,24 +113,28 @@ Models/
 - Avoid introducing extra top-level folders unless they map to server, consumer, docs, or slides.
 - Document integration boundaries clearly (server API surface, consumer call path) as soon as code appears.
 
-## Code Quality Standards (Established Through Refactoring)
-1. **Simplicity over abstraction**: Prefer direct, visible code flow over "clean architecture" ceremony
-2. **No unnecessary indirection**: Eliminate single-method wrapper classes and factory methods that just wrap object initialization
-3. **Constants near usage**: Distribute constants to relevant classes, not monolithic constant files
-4. **Consistent architecture**: If one server is static, make them all static (no mixing patterns)
-5. **Namespace organization**: Group related files (Configuration/, Models/, Services/, Servers/)
-6. **Demo-friendly Program.cs**: Keep entry point short and clear for presentation purposes
-7. **Type safety**: Use enums over string constants for type-safe selection (e.g., ServerMode)
-8. **Honest abstractions**: Static classes that don't need instances shouldn't pretend to be instance-based
+## Code Quality Standards
+
+### For Talk/Demo Code
+1. **SDK over custom protocol**: Use official MCP SDK to demonstrate best practices, not low-level protocol implementation
+2. **Attribute-driven patterns**: Leverage `[McpServerTool]` and `[McpServerResource]` for clear, declarative API surface
+3. **Dependency injection**: Use standard .NET DI patterns for services like `TodoApiClient`
+4. **Host builder pattern**: Follow .NET hosting conventions for both stdio and HTTP modes
+5. **Demo-friendly entry point**: Keep `Program.cs` short and clear with obvious branching for different modes
+6. **Descriptive attributes**: Use `[Description]` on tools, resources, and parameters for self-documenting APIs
+
+### Architecture Notes
+- **Custom protocol branch preserved**: `custom-protocol-implementation` branch contains low-level JSON-RPC implementation for reference
+- **SDK advantages for talks**: Attendees can replicate the patterns, focus shifts from protocol to business logic
+- **Tool results as strings**: Simple string returns from tool methods make demo output clear and readable
 
 ## Common Pitfalls To Avoid
-- Creating Constants.cs junk drawer files
-- Mixing static and instance patterns in related classes
-- Factory methods that only wrap `new { }`
-- Single-method "runner" classes that just delegate
-- Tuple returns when static properties would be clearer
+- Skipping `[Description]` attributes on tools and parameters (reduces LLM tool-use effectiveness)
+- Mixing SDK registration methods (use `.WithTools<T>()` not manual registration)
+- Forgetting to mark tool/resource classes with `[McpServerToolType]`/`[McpServerResourceType]`
 - Using raw `ILogger` instead of `ILogger<T>` in .NET 10
-- Missing `[FromServices]` attributes causing parameter binding ambiguity
+- Missing `[FromServices]` attributes in TodoApi causing parameter binding ambiguity
+- Trying to implement custom protocol handling when SDK provides it
 
 ## Integration Points To Track As Code Is Added
 - MCP protocol boundary between server and consumer.
