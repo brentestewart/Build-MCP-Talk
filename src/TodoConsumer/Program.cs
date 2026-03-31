@@ -36,7 +36,7 @@ try
     // Check if Azure OpenAI is configured
     var azureEndpoint = configuration["AzureOpenAI:Endpoint"];
     var azureApiKey = configuration["AzureOpenAI:ApiKey"];
-    var azureDeployment = configuration["AzureOpenAI:Deployment"] ?? "gpt-4";
+    var azureDeployment = configuration["AzureOpenAI:Deployment"] ?? "gpt-4o-mini";
     bool aiEnabled = !string.IsNullOrEmpty(azureEndpoint) && !string.IsNullOrEmpty(azureApiKey);
 
     // Interactive menu loop

@@ -417,14 +417,31 @@
       </div>
     </section>
 
-    <!-- 10. ARCHITECTURE -->
+    <!-- 10. CAPABILITIES -->
+    <section data-background-color="#0A0E1A">
+      <span class="label">// Beyond the Basics</span>
+      <h2>Advanced <span class="ac">Capabilities</span></h2>
+      <p class="dim" style="margin-bottom:0.8em;">Additional features that extend what MCP can do</p>
+      <ul style="margin-top:0.6em;">
+        <li class="fragment"><strong style="color:#fff">Roots</strong> — Client exposes filesystem paths the server can access. Defines security boundaries.</li>
+        <li class="fragment"><strong style="color:#fff">Sampling</strong> — Server requests text generation from the host's LLM (no server API keys needed).</li>
+        <li class="fragment"><strong style="color:#fff">Notifications</strong> — Real-time updates when lists or resources change. Bidirectional.</li>
+        <li class="fragment"><strong style="color:#fff">Progress</strong> — Long-running operations report status updates with progress tokens.</li>
+        <li class="fragment"><strong style="color:#fff">Logging</strong> — Server sends diagnostic messages with severity levels (debug, info, error, etc.).</li>
+      </ul>
+      <div class="hbox fragment" style="margin-top:0.8em; font-size:0.85em;">
+        Most servers only need <strong>Tools, Resources, and Prompts</strong>. These capabilities are for advanced scenarios.
+      </div>
+    </section>
+
+    <!-- 11. ARCHITECTURE -->
     <section data-background-color="#0A0E1A">
       <span class="label">// MCP Architecture</span>
       <h2>How It Fits Together</h2>
       <div class="flow">
         <div class="fnode">👤 User</div>
         <div class="farrow">→</div>
-        <div class="fnode a">🖥 Host<br><span style="font-size:0.85em;color:var(--muted)">Claude / VS Code</span></div>
+        <div class="fnode a">🖥 Host<br><span style="font-size:0.85em;color:var(--muted)">Claude / VS Code / Custom App</span></div>
         <div class="farrow">→</div>
         <div class="fnode">🔌 MCP Client<br><span style="font-size:0.85em;color:var(--muted)">built into host</span></div>
         <div class="farrow">→</div>
@@ -444,7 +461,7 @@
       </div>
     </section>
 
-    <!-- 11. BUILDING IN .NET -->
+    <!-- 12. BUILDING IN .NET -->
     <section data-background-color="#0A0E1A">
       <span class="label">// Building Your First MCP Server</span>
       <h2>The .NET Way</h2>
@@ -470,7 +487,7 @@
       </div>
     </section>
 
-    <!-- 12. LIVE DEMO -->
+    <!-- 13. LIVE DEMO -->
     <section data-background-color="#0A0E1A">
       <div class="grid-bg"></div>
       <span class="label">// Live Demo</span>
@@ -493,7 +510,7 @@
       </div>
     </section>
 
-    <!-- 13. DESCRIPTIONS MATTER -->
+    <!-- 14. DESCRIPTIONS MATTER -->
     <section data-background-color="#0A0E1A">
       <span class="label">// Critical Insight</span>
       <h2>The LLM never<br>sees your code.</h2>
@@ -511,7 +528,7 @@
       </div>
     </section>
 
-    <!-- 14. BEST PRACTICES -->
+    <!-- 15. BEST PRACTICES -->
     <section data-background-color="#0A0E1A">
       <span class="label">// Best Practices</span>
       <h2>Build servers<br>that <span class="ac">actually work.</span></h2>
@@ -524,7 +541,7 @@
       </ul>
     </section>
 
-    <!-- 15. PROMPT INJECTION - WHAT IS IT -->
+    <!-- 16. PROMPT INJECTION - WHAT IS IT -->
     <section data-background-color="#0A0E1A">
       <span class="label">// Security Risk</span>
       <h2>Prompt Injection —<br><span class="red">the attack you didn't see coming</span></h2>
@@ -541,7 +558,7 @@
       </div>
     </section>
 
-    <!-- 16. PROMPT INJECTION - DEFENSE -->
+    <!-- 17. PROMPT INJECTION - DEFENSE -->
     <section data-background-color="#0A0E1A">
       <span class="label">// Security Risk</span>
       <h2>How to defend<br>against it</h2>
@@ -555,7 +572,7 @@
       </div>
     </section>
 
-    <!-- 17. MULTI-SERVER COMPOSITION -->
+    <!-- 18. MULTI-SERVER COMPOSITION -->
     <section data-background-color="#0A0E1A">
       <span class="label">// Integration Scenarios</span>
       <h2>One LLM.<br><span class="ac">Multiple MCP servers.</span></h2>
@@ -615,7 +632,7 @@
       </div>
     </section>
 
-    <!-- 18. INSPECTOR -->
+    <!-- 19. INSPECTOR -->
     <section data-background-color="#0A0E1A">
       <span class="label">// Practical Considerations</span>
       <h2>Debugging with the<br><span class="ac">MCP Inspector</span></h2>
@@ -630,7 +647,7 @@
       </ul>
     </section>
 
-    <!-- 19. VS CODE TIPS -->
+    <!-- 20. VS CODE TIPS -->
     <section data-background-color="#0A0E1A">
       <span class="label">// Practical Considerations</span>
       <h2>VS Code <span class="ac">Tips</span></h2>
@@ -652,7 +669,7 @@
       </div>
     </section>
 
-    <!-- 15. ECOSYSTEM -->
+    <!-- 21. ECOSYSTEM -->
     <section data-background-color="#0A0E1A">
       <span class="label">// Where is MCP Headed?</span>
       <h2>The ecosystem<br>is moving <span class="ac">fast.</span></h2>
@@ -688,7 +705,7 @@
       </div>
     </section>
 
-    <!-- 16. CLOSING -->
+    <!-- 22. CLOSING -->
     <section data-background-color="#0A0E1A">
       <div class="grid-bg"></div>
       <span class="label">// Brent Stewart</span>
