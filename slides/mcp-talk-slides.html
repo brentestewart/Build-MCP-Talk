@@ -300,7 +300,7 @@
         <ul>
           <li>Created by Anthropic — November 2024</li>
           <li>Built on JSON-RPC 2.0</li>
-          <li>Adopted by OpenAI, Google, and more</li>
+          <li>Adopted by OpenAI, Google, Microsoft, Amazon, Hugging Face, and more</li>
           <li>Donated to Linux Foundation — Dec 2025</li>
         </ul>
         <div class="code">
@@ -435,11 +435,11 @@
       <div class="cards c2">
         <div class="card">
           <h3>Local — stdio</h3>
-          <p>Runs on same machine as the host. Great for Claude Desktop and development.</p>
+          <p>Runs on same machine as the host. Great for local LLMs, desktop tools, and development.</p>
         </div>
         <div class="card">
           <h3>Remote — Streamable HTTP</h3>
-          <p>Hosted on the web. Required for claude.ai and sharing with others.</p>
+          <p>Hosted on a web server. Required for cloud access or sharing with others.</p>
         </div>
       </div>
     </section>
@@ -451,12 +451,13 @@
       <div class="two" style="margin-top:0.6em; gap:1.5em;">
         <ul>
           <li>Official <span class="mono">ModelContextProtocol</span> NuGet package</li>
-          <li>Integrates with ASP.NET minimal APIs</li>
+          <li>Works with any ASP.NET Core app</li>
           <li>Decorators define your tools and resources</li>
           <li>LLM only sees <strong style="color:#fff">names &amp; descriptions</strong></li>
         </ul>
         <div class="code">
           [<span class="y">McpServerTool</span>]<br>
+          [<span class="y">Description</span>(<span class="ac">"Returns all incomplete tasks. Call this when the user wants to see or work with their open tasks."</span>)]<br>
           <span class="w">public async</span> <span class="ac">Task</span>&lt;<span class="w">string</span>&gt;<br>
           &nbsp;&nbsp;<span class="y">ListOpenTasks</span>()<br>
           {<br>
@@ -627,6 +628,28 @@
         <li>Verify resources independently of any host</li>
         <li>View raw JSON-RPC messages — great for debugging</li>
       </ul>
+    </section>
+
+    <!-- 19. VS CODE TIPS -->
+    <section data-background-color="#0A0E1A">
+      <span class="label">// Practical Considerations</span>
+      <h2>VS Code <span class="ac">Tips</span></h2>
+      <div style="margin-top:0.6em; max-width:900px;">
+        <h3 style="font-size:0.8em; color:var(--accent); margin-bottom:0.5em;">Restart your MCP server</h3>
+        <p style="font-size:0.75em; line-height:1.6; margin-bottom:1em;">
+          Command Palette → <span class="mono">MCP: List Servers</span> → Select Server → <strong style="color:#fff">Restart Server</strong>
+        </p>
+        
+        <h3 style="font-size:0.8em; color:var(--accent); margin-bottom:0.5em;">Add a resource to conversation</h3>
+        <p style="font-size:0.75em; line-height:1.6; margin-bottom:1em;">
+          <strong style="color:#fff">+</strong> button → <span class="mono">MCP Resources</span> → Select Resource
+        </p>
+        
+        <h3 style="font-size:0.8em; color:var(--accent); margin-bottom:0.5em;">Manage your MCP servers</h3>
+        <p style="font-size:0.75em; line-height:1.6;">
+          Extensions view (<span class="mono">Ctrl+Shift+X</span> / <span class="mono">Cmd+Shift+X</span>) — MCP servers appear at the bottom
+        </p>
+      </div>
     </section>
 
     <!-- 15. ECOSYSTEM -->

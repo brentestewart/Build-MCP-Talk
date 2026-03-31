@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using ModelContextProtocol.Server;
 using TodoMcpServer.Configuration;
+using TodoMcpServer.Prompts;
 using TodoMcpServer.Resources;
 using TodoMcpServer.Services;
 using TodoMcpServer.Tools;
@@ -35,7 +36,8 @@ public static class ServiceCollectionExtensions
         
         mcpBuilder
             .WithTools<TodoTools>()
-            .WithResources<TodoResources>();
+            .WithResources<TodoResources>()
+            .WithPrompts<TodoPrompts>();
 
         return services;
     }
